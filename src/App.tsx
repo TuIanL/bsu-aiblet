@@ -11,7 +11,7 @@ export type TabKey = "product" | "analysis" | "monitor" | "interaction";
 
 function App() {
   const [scenario, setScenario] = useState<ScenarioKey>("normal");
-  const [activeTab, setActiveTab] = useState<TabKey>("product");
+  const [activeTab, setActiveTab] = useState<TabKey>("analysis");
 
   const frames = useMemo(() => generateMockSensorFrames(scenario), [scenario]);
   const snapshot = useMemo(

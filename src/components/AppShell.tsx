@@ -32,9 +32,9 @@ interface AppShellProps {
 }
 
 const tabs: { key: TabKey; label: string }[] = [
-  { key: "product", label: "产品详细页" },
   { key: "analysis", label: "数据分析端" },
   { key: "monitor", label: "实时与长期监测" },
+  { key: "product", label: "产品详细页" },
   { key: "interaction", label: "子女交互" },
 ];
 
