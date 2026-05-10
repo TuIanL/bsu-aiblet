@@ -18,30 +18,30 @@ const postureRotation = {
 export function LumbarStatusCard({ lumbar, device }: LumbarStatusCardProps) {
   return (
     <div className="grid gap-4 lg:grid-cols-[0.9fr_1.4fr]">
-      <div className="rounded-lg border border-white/80 bg-white/95 p-5 shadow-card">
+      <div className="rounded-lg border border-gold-600/30 bg-mist/50 p-5 shadow-soft">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h3 className="text-lg font-semibold text-ink">腰部状态示意</h3>
-            <p className="mt-1 text-sm text-slate-500">当前姿态：{lumbar.posture}</p>
+            <h3 className="text-lg font-bold text-gold-400">腰部状态示意</h3>
+            <p className="mt-1 text-sm text-gold-200/60">当前姿态：{lumbar.posture}</p>
           </div>
-          <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm text-emerald-700">
+          <span className="rounded-full bg-gold-900/40 border border-gold-600/30 px-3 py-1 text-sm text-gold-400">
             {device.wearingStatus}
           </span>
         </div>
-        <div className="mt-6 flex h-64 items-center justify-center rounded-lg bg-gradient-to-b from-blue-50 to-emerald-50">
+        <div className="mt-6 flex h-64 items-center justify-center rounded-lg bg-dark-bg/80 border border-gold-600/20 shadow-inner">
           <div className={`relative transition-transform duration-300 ${postureRotation[lumbar.posture]}`}>
-            <div className="mx-auto h-12 w-12 rounded-full bg-slate-300" />
-            <div className="mx-auto mt-2 h-24 w-16 rounded-[28px] bg-slate-300" />
-            <div className="absolute left-1/2 top-[98px] h-14 w-32 -translate-x-1/2 rounded-lg border-4 border-emerald-500 bg-emerald-100/70 shadow-soft">
+            <div className="mx-auto h-12 w-12 rounded-full bg-gold-900/50 border border-gold-600/30 shadow-gold" />
+            <div className="mx-auto mt-2 h-24 w-16 rounded-[28px] bg-gold-800/40 border border-gold-600/20" />
+            <div className="absolute left-1/2 top-[98px] h-14 w-32 -translate-x-1/2 rounded-lg border-2 border-gold-400 bg-gold-900/60 shadow-gold">
               <div
-                className="h-full rounded bg-emerald-400/50"
+                className="h-full rounded bg-gold-gradient opacity-80"
                 style={{ width: `${lumbar.fitScore}%` }}
               />
             </div>
-            <div className="mx-auto mt-2 h-16 w-20 rounded-b-full bg-slate-300" />
+            <div className="mx-auto mt-2 h-16 w-20 rounded-b-full bg-gold-900/50 border border-gold-600/30 shadow-gold" />
           </div>
         </div>
-        <p className="mt-4 text-sm leading-6 text-slate-600">
+        <p className="mt-4 text-sm leading-6 text-gold-200/50">
           示意图用于展示护腰贴合和腰部姿态变化，当前不作为医疗判断依据。
         </p>
       </div>

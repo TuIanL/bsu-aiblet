@@ -4,6 +4,8 @@ import {
   Legend,
   Line,
   LineChart,
+  AreaChart,
+  ComposedChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -31,35 +33,38 @@ export function RealtimeSensorChart({
   unit,
 }: RealtimeSensorChartProps) {
   return (
-    <div className="rounded-lg border border-white/80 bg-white/95 p-4 shadow-soft">
+    <div className="rounded-lg border border-gold-600/30 bg-mist/50 p-4 shadow-soft">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h3 className="text-base font-semibold text-ink">{title}</h3>
-        {unit ? <span className="text-xs text-slate-500">{unit}</span> : null}
+        <h3 className="text-base font-bold text-gold-400">{title}</h3>
+        {unit ? <span className="text-xs text-gold-500/70">{unit}</span> : null}
       </div>
       <div className="h-64 min-w-0">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={frames} margin={{ top: 10, right: 12, bottom: 0, left: -22 }}>
-            <CartesianGrid stroke="#e8f0f2" strokeDasharray="3 3" />
+          <ComposedChart data={frames} margin={{ top: 10, right: 12, bottom: 0, left: -22 }}>
+            <CartesianGrid stroke="rgba(212, 136, 6, 0.1)" strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"
-              tick={{ fill: "#64748b", fontSize: 12 }}
+              tick={{ fill: "#d48806", fontSize: 12 }}
               tickLine={false}
               axisLine={false}
               minTickGap={20}
             />
             <YAxis
-              tick={{ fill: "#64748b", fontSize: 12 }}
+              tick={{ fill: "#d48806", fontSize: 12 }}
               tickLine={false}
               axisLine={false}
             />
             <Tooltip
               contentStyle={{
                 borderRadius: 8,
-                border: "1px solid #dbe8ec",
-                boxShadow: "0 12px 32px rgba(15, 23, 42, 0.12)",
+                backgroundColor: 'rgba(21, 16, 13, 0.9)',
+                border: "1px solid rgba(212, 136, 6, 0.3)",
+                boxShadow: "0 0 15px rgba(250, 173, 20, 0.2)",
+                color: '#faad14'
               }}
+              itemStyle={{ color: '#faad14' }}
             />
-            <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
+            <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: '#d48806' }} />
             {series.map((item) =>
               kind === "area" ? (
                 <Area
@@ -68,8 +73,8 @@ export function RealtimeSensorChart({
                   name={item.name}
                   stroke={item.color}
                   fill={item.color}
-                  fillOpacity={0.1}
-                  strokeWidth={2}
+                  fillOpacity={0.4}
+                  strokeWidth={3}
                   dot={false}
                   type="monotone"
                 />
@@ -85,7 +90,7 @@ export function RealtimeSensorChart({
                 />
               ),
             )}
-          </LineChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </div>

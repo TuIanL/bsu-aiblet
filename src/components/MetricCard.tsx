@@ -7,17 +7,18 @@ interface MetricCardProps {
   unit?: string;
   detail?: string;
   icon?: LucideIcon;
-  tone?: "green" | "blue" | "cyan" | "yellow" | "orange" | "red" | "slate";
+  tone?: "green" | "blue" | "cyan" | "yellow" | "orange" | "red" | "slate" | "gold";
 }
 
 const toneClasses = {
-  green: "bg-emerald-50 text-emerald-700 border-emerald-100",
-  blue: "bg-blue-50 text-blue-700 border-blue-100",
-  cyan: "bg-cyan-50 text-cyan-700 border-cyan-100",
-  yellow: "bg-amber-50 text-amber-700 border-amber-100",
-  orange: "bg-orange-50 text-orange-700 border-orange-100",
-  red: "bg-red-50 text-red-700 border-red-100",
-  slate: "bg-slate-50 text-slate-700 border-slate-100",
+  green: "bg-gold-900/40 text-gold-400 border-gold-600/30",
+  blue: "bg-gold-800/40 text-gold-300 border-gold-500/30",
+  cyan: "bg-gold-700/40 text-gold-200 border-gold-400/30",
+  yellow: "bg-gold-600/40 text-gold-100 border-gold-300/30",
+  orange: "bg-orange-900/40 text-orange-400 border-orange-600/30",
+  red: "bg-red-900/40 text-red-400 border-red-600/30",
+  slate: "bg-mist/60 text-gold-200/50 border-gold-600/20",
+  gold: "bg-gold-gradient text-mist border-gold-400 shadow-gold",
 };
 
 export function MetricCard({
@@ -26,25 +27,25 @@ export function MetricCard({
   unit,
   detail,
   icon: Icon,
-  tone = "blue",
+  tone = "gold",
 }: MetricCardProps) {
   return (
-    <div className="rounded-lg border border-white/80 bg-white/92 p-4 shadow-soft">
+    <div className="rounded-lg border border-gold-600/30 bg-mist/50 p-4 shadow-soft hover:border-gold-500/50 transition-colors group">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm text-slate-500">{title}</p>
+          <p className="text-sm text-gold-500">{title}</p>
           <div className="mt-2 flex items-end gap-1">
-            <span className="text-2xl font-semibold tracking-normal text-ink">{value}</span>
-            {unit ? <span className="pb-1 text-sm text-slate-500">{unit}</span> : null}
+            <span className="text-2xl font-bold tracking-normal text-gold-200">{value}</span>
+            {unit ? <span className="pb-1 text-sm text-gold-200/60">{unit}</span> : null}
           </div>
         </div>
         {Icon ? (
-          <div className={`rounded-lg border p-2 ${toneClasses[tone]}`}>
+          <div className={`rounded-lg border p-2 transition-all ${toneClasses[tone]} group-hover:shadow-gold`}>
             <Icon className="h-5 w-5" aria-hidden="true" />
           </div>
         ) : null}
       </div>
-      {detail ? <p className="mt-3 text-sm leading-5 text-slate-500">{detail}</p> : null}
+      {detail ? <p className="mt-3 text-sm leading-5 text-gold-100/50">{detail}</p> : null}
     </div>
   );
 }

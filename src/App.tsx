@@ -7,8 +7,11 @@ import {
 } from "./lib/algorithms";
 import type { ScenarioKey } from "./types";
 
+export type TabKey = "product" | "analysis" | "monitor" | "interaction";
+
 function App() {
   const [scenario, setScenario] = useState<ScenarioKey>("normal");
+  const [activeTab, setActiveTab] = useState<TabKey>("product");
 
   const frames = useMemo(() => generateMockSensorFrames(scenario), [scenario]);
   const snapshot = useMemo(
@@ -22,6 +25,8 @@ function App() {
       scenario={scenario}
       snapshot={snapshot}
       onScenarioChange={setScenario}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
     />
   );
 }

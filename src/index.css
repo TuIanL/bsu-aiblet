@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color: #172033;
-  background: #f5f9fb;
+  color: #fdf6e3;
+  background: #0d0a08;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -19,10 +19,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(17, 167, 183, 0.13), transparent 30rem),
-    radial-gradient(circle at top right, rgba(31, 122, 224, 0.11), transparent 34rem),
-    linear-gradient(180deg, #f5f9fb 0%, #eef7f5 52%, #f8fbff 100%);
+  background: radial-gradient(circle at center top, #442a1a 0%, #150f0c 100%);
+  background-attachment: fixed;
 }
 
 button,
@@ -37,9 +35,20 @@ button {
 }
 
 ::selection {
-  background: rgba(22, 161, 99, 0.18);
+  background: rgba(250, 173, 20, 0.3);
 }
 
 .recharts-wrapper text {
   font-family: inherit;
+  fill: #d48806 !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(212, 136, 6, 0.1) !important;
+}
+
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric polygon {
+  stroke: rgba(212, 136, 6, 0.2) !important;
 }
