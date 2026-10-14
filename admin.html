@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>安行护腰 · 社区管理平台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231b9ddb'/%3E%3Cpath d='M8 19c4-6 8-8 16-7-3 1-6 3-8 6 3 0 5 1 7 3-5 0-9-1-15 2 1-2 1-3 0-4Z' fill='white'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="assets/platform.css" />
+<style>
+  .side{position:fixed;top:56px;bottom:0;left:0;width:186px;background:#fff;border-right:1px solid var(--line);
+       padding:12px 10px;overflow:auto;z-index:40}
+  .side .grp{font:600 9.5px 'Space Grotesk';letter-spacing:.13em;color:var(--faint);padding:11px 8px 5px}
+  .side a{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:6px;font-size:12.5px;
+          color:#3c454e;transition:.14s;margin-bottom:1px}
+  .side a:hover{background:var(--pale);color:var(--deep)}
+  .side a.on{background:#eaf5fb;color:var(--deep);font-weight:600}
+  .side a .c{margin-left:auto;font:600 10px 'Space Grotesk';background:#fff;border:1px solid var(--line);
+             border-radius:9px;padding:0 6px;color:var(--muted)}
+  .side a.on .c{border-color:#bfe0f2;color:var(--deep)}
+  .side a .c.hot{background:#fdecec;border-color:#f3c9c9;color:#c33}
+  .main{margin-left:186px;padding:16px 20px 40px}
+  @media(max-width:900px){.side{display:none}.main{margin-left:0}}
+  .view{display:none}.view.on{display:block}
+  .prog{height:5px;border-radius:3px;background:#eef2f5;overflow:hidden;min-width:52px}
+  .prog i{display:block;height:100%;border-radius:3px;background:var(--blue)}
+  .prog.low i{background:var(--red)}.prog.mid i{background:var(--orange)}
+  .spark{display:flex;gap:2px;align-items:flex-end;height:22px}
+  .spark i{width:4px;background:#a9d8ee;border-radius:1px}
+  .devrow.sel{background:#eaf5fb}
+  .evtrow{cursor:pointer}
+  .evtrow:hover{background:#f2f9fd}
+  .prio{font:600 10px 'Space Grotesk';padding:2px 7px;border-radius:4px}
+  .prio.P0{background:#fdecec;color:#c33}.prio.P1{background:#fef1e6;color:#c96a1c}.prio.P2{background:#eef2f5;color:#69737d}
+  .form-in{margin-bottom:11px}
+  .form-in textarea{min-height:62px;resize:vertical;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- ===================== 登录 ===================== -->
+<div id="loginView" class="login-wrap" style="display:none">
+  <form class="login" id="loginForm">
+    <div class="lg">
+      <img src="brand-logo.png" alt="" />
+      <div><h1>安行护腰</h1><small>COMMUNITY CARE PLATFORM</small></div>
+    </div>
+    <div class="fld">
+      <label class="lbl">运营账号</label>
+      <input class="inp" name="username" placeholder="如 operator@yq-station" autocomplete="username" />
+    </div>
+    <div class="fld">
+      <label class="lbl">登录口令</label>
+      <input class="inp" name="password" type="password" placeholder="演示环境统一为 8888" autocomplete="current-password" />
+    </div>
+    <div class="err" id="loginErr"></div>
+    <button class="btn pri" type="submit">登录管理平台</button>
+    <div class="tip">
+      演示环境：任意账号 + 口令 <b class="mono">8888</b> 即可进入。<br />
+      数据来自本地 SQLite，服务端为 <b class="mono">server/app.py</b>，设备数据由 <b class="mono">server/simulator.py</b> 实时上报。
+    </div>
+  </form>
+</div>
+
+<!-- ===================== 主界面 ===================== -->
+<div id="appView" style="display:none">
+  <header class="topbar">
+    <div class="brand">
+      <img src="brand-logo.png" alt="" />
+      <div><b>安行护腰</b><small>COMMUNITY CARE PLATFORM</small></div>
+    </div>
+    <nav>
+      <a href="index.html">官网首页</a>
+      <a href="event-flow.html">事件流程回放</a>
+    </nav>
+    <div class="right">
+      <span class="pill" id="sitePill"><span class="dot off" id="liveDot"></span><span id="liveTxt">连接中</span></span>
+      <span class="pill" id="clockPill" style="font-family:var(--mono)">—</span>
+      <span class="pill" id="userPill">—</span>
+      <button class="btn sm" id="logoutBtn" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#cfe4f0">退出</button>
+    </div>
+  </header>
+
+  <aside class="side">
+    <div class="grp">运行</div>
+    <a href="#dash" data-v="dash" class="on">▦ 运营总览</a>
+    <a href="#events" data-v="events">⚠ 事件与响应 <span class="c hot" id="navPending">0</span></a>
+    <a href="#devices" data-v="devices">▤ 设备台账</a>
+    <div class="grp">服务闭环七环节</div>
+    <a href="#elders" data-v="elders">① 老人档案与评估</a>
+    <a href="#wear" data-v="wear">④ 佩戴率看板</a>
+    <a href="#heat" data-v="heat">⑥ 社区风险分布</a>
+    <a href="#report" data-v="report">⑦ 季度报告与改造建议</a>
+    <div class="grp">留痕</div>
+    <a href="#audit" data-v="audit">◷ 全流程操作日志</a>
+  </aside>
+
+  <main class="main">
+    <div class="notice blue">
+      <b>演示环境说明</b>
+      <div>本站为概念验证阶段的平台演示（TRL 3–4）。页面内所有性能数值、风险判定与处置结论均为演示数据，
+        不构成医学诊断，也不代表整机实测结果。接入真实硬件时，只需将 <code class="mono">server/simulator.py</code>
+        替换为网关的 HTTP 客户端，平台侧无需改动。</div>
+    </div>
+
+    <!-- ---------- 总览 ---------- -->
+    <section class="view on" id="v-dash">
+      <div class="page-head">
+        <h1>运营总览</h1>
+        <span class="sub" id="dashSub">—</span>
+        <div class="spacer"></div>
+        <span class="bdg blue b-lg" id="lastSync">—</span>
+      </div>
+      <div class="grid g4" id="kpiRow"></div>
+
+      <div class="grid g2" style="margin-top:12px">
+        <div class="card">
+          <div class="card-h"><span class="tag">近 7 日佩戴时长</span><h3>站点依从性</h3>
+            <div class="spacer"></div><span class="hint">单位：分钟 / 全站点合计</span></div>
+          <div class="bars" id="wearBars"></div>
+          <div class="axis" id="wearAxis"></div>
+          <div class="flow-note" id="wearNote"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="tag">风险构成</span><h3>老人风险分级</h3>
+            <div class="spacer"></div><span class="hint">依据防跌安全评估</span></div>
+          <div id="riskBox"></div>
+          <div class="flow-note">风险分级结果是<b>照护资源配置建议</b>，用于区分需每日探访、需助行辅具适配、仅需月度回访的人群，
+            不构成医学诊断或疾病风险评级。</div>
+        </div>
+      </div>
+
+      <div class="grid g2" style="margin-top:12px">
+        <div class="card pad0">
+          <div class="card-h" style="padding:14px 16px 0"><h3>最新事件</h3>
+            <div class="spacer"></div><button class="btn sm" data-goto="events">查看全部</button></div>
+          <div class="tbl-wrap scroll" style="max-height:322px"><table class="mini" id="recentTbl"></table></div>
+        </div>
+        <div class="card pad0">
+          <div class="card-h" style="padding:14px 16px 0"><h3>高发点位</h3>
+            <div class="spacer"></div><button class="btn sm" data-goto="heat">风险分布</button></div>
+          <div class="tbl-wrap scroll" style="max-height:322px"><table class="mini" id="hotTbl"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 事件与响应 ---------- -->
+    <section class="view" id="v-events">
+      <div class="page-head">
+        <h1>事件与响应记录</h1>
+        <span class="sub">设备推送 → 平台留痕 → 双通道通知 → 人工响应 → 复盘，全流程可追溯</span>
+      </div>
+      <div class="card pad0">
+        <div style="padding:12px 16px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)">
+          <select class="inp" id="fKind" style="width:130px">
+            <option value="">全部类型</option><option>跌倒</option><option>险跌</option><option>误报</option><option>设备告警</option>
+          </select>
+          <select class="inp" id="fStage" style="width:130px">
+            <option value="">全部阶段</option><option>待接单</option><option>已接单</option><option>已到场</option><option>已处置</option><option>已复盘</option>
+          </select>
+          <input class="inp" id="fQ" placeholder="搜索事件号 / 点位" style="width:200px" />
+          <button class="btn pri" id="fGo">筛选</button>
+          <div style="margin-left:auto" class="btn-row">
+            <a class="btn sm" href="event-flow.html" id="toFlow">打开流程回放 →</a>
+          </div>
+        </div>
+        <div class="tbl-wrap scroll" style="max-height:none"><table id="evtTbl"></table></div>
+      </div>
+    </section>
+
+    <!-- ---------- 设备台账 ---------- -->
+    <section class="view" id="v-devices">
+      <div class="page-head">
+        <h1>设备台账与实时状态</h1>
+        <span class="sub">遥测由设备网关周期上报，状态与佩戴时长实时刷新</span>
+        <div class="spacer"></div>
+        <span class="bdg green b-lg" id="devLive">—</span>
+      </div>
+      <div class="grid g4" id="devKpi" style="margin-bottom:12px"></div>
+      <div class="card pad0"><div class="tbl-wrap"><table id="devTbl"></table></div></div>
+      <div class="flow-note">
+        储气压力低于 <b>82 kPa</b> 时设备需回充（充电底座或社区回充站 R-01），气囊排气后可复位、<b>不产生耗材</b>。
+        柔性传感通道出现基线漂移时系统降级为惯性通道单独判定，不触发气囊。
+      </div>
+    </section>
+
+    <!-- ---------- 老人档案 ---------- -->
+    <section class="view" id="v-elders">
+      <div class="page-head">
+        <h1>老人档案与防跌安全评估</h1>
+        <span class="sub">环节 ① 社区进场与建档 → ② 防跌安全评估 → ③ 设备配发与佩戴指导</span>
+        <div class="spacer"></div>
+        <input class="inp" id="eQ" placeholder="搜索姓名 / 编号" style="width:190px" />
+      </div>
+      <div class="card pad0"><div class="tbl-wrap"><table id="eldTbl"></table></div></div>
+    </section>
+
+    <!-- ---------- 佩戴率 ---------- -->
+    <section class="view" id="v-wear">
+      <div class="page-head">
+        <h1>佩戴率看板</h1>
+        <span class="sub">环节 ④ 日常运行与依从性维护 — 识别依从性下降的对象，及时介入</span>
+        <div class="spacer"></div>
+        <span class="bdg orange b-lg">依从性下降是防护效能归零的首要原因</span>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-h"><h3>站点近 7 日佩戴时长合计</h3>
+          <div class="spacer"></div><span class="hint">柱高按当日合计分钟数</span></div>
+        <div class="bars" id="wearBars2" style="height:110px"></div>
+        <div class="axis" id="wearAxis2"></div>
+      </div>
+      <div class="card pad0"><div class="tbl-wrap"><table id="wearTbl"></table></div></div>
+    </section>
+
+    <!-- ---------- 风险分布 ---------- -->
+    <section class="view" id="v-heat">
+      <div class="page-head">
+        <h1>社区跌倒风险分布</h1>
+        <span class="sub">环节 ⑥ 数据回流与社区画像 — 事件点位聚合，输出群体层面分布</span>
+        <div class="spacer"></div>
+        <span class="bdg gray b-lg">数据经匿名化处理，不含个体身份</span>
+      </div>
+      <div class="grid g2">
+        <div class="card">
+          <div class="card-h"><h3>站点风险热力图</h3><div class="spacer"></div>
+            <span class="hint">圆面积 = 事件量，颜色 = 跌倒占比</span></div>
+          <div class="heat" id="heatMap" style="height:330px"></div>
+          <div class="hlegend">
+            <span>跌倒占比低</span>
+            <i style="background:#7fd0a3"></i><i style="background:#ffc46b"></i><i style="background:#f08a5d"></i><i style="background:#d94f4f"></i>
+            <span>高</span>
+            <span style="margin-left:auto">悬停查看点位明细</span>
+          </div>
+        </div>
+        <div class="card pad0">
+          <div class="card-h" style="padding:14px 16px 0"><h3>点位事件统计</h3>
+            <div class="spacer"></div><span class="hint">按事件总量排序</span></div>
+          <div class="tbl-wrap scroll" style="max-height:392px"><table class="mini" id="heatTbl"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 报告与建议 ---------- -->
+    <section class="view" id="v-report">
+      <div class="page-head">
+        <h1>季度报告与改造建议</h1>
+        <span class="sub">环节 ⑦ 环境改造建议与复评 — 平台出初稿，人工核校后输出</span>
+      </div>
+      <div class="grid g2">
+        <div class="card" id="reportCard"><div class="loading">载入中…</div></div>
+        <div class="card pad0">
+          <div class="card-h" style="padding:14px 16px 0"><h3>适老化改造建议清单</h3>
+            <div class="spacer"></div><span class="hint">按复盘结论聚合到点位</span></div>
+          <div class="tbl-wrap scroll" style="max-height:400px"><table class="mini" id="sugTbl"></table></div>
+        </div>
+      </div>
+      <div class="flow-note">
+        建议清单的用途是为街道与物业的适老化改造财政资金提供<strong>点位颗粒度</strong>的决策依据 ——
+        有限的预算究竟该装扶手、改地面，还是改某个楼门。清单由事件复盘结论自动聚合，需人工核校后提交。
+      </div>
+    </section>
+
+    <!-- ---------- 审计 ---------- -->
+    <section class="view" id="v-audit">
+      <div class="page-head">
+        <h1>全流程操作日志</h1>
+        <span class="sub">服务闭环的每个动作都留痕，可回溯到具体人与时间</span>
+      </div>
+      <div class="card pad0"><div class="tbl-wrap scroll" style="max-height:640px"><table class="mini" id="audTbl"></table></div></div>
+    </section>
+  </main>
+</div>
+
+<!-- ===================== 详情抽屉 ===================== -->
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <header>
+    <h3 id="drTitle">事件详情</h3>
+    <span class="bdg gray" id="drStage">—</span>
+    <button class="x" id="drClose">×</button>
+  </header>
+  <div class="body" id="drBody"></div>
+  <footer id="drFoot"></footer>
+</div>
+
+<script src="assets/platform.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

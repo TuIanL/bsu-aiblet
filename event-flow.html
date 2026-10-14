@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>安行护腰 · 一次完整设备事件流程</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231b9ddb'/%3E%3Cpath d='M8 19c4-6 8-8 16-7-3 1-6 3-8 6 3 0 5 1 7 3-5 0-9-1-15 2 1-2 1-3 0-4Z' fill='white'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="assets/platform.css" />
+<style>
+  .topbar{position:sticky;top:0;z-index:60;height:56px;padding:0 20px;display:flex;align-items:center;gap:16px;
+    background:#0d2233;color:#e8f2f8;box-shadow:0 2px 14px rgba(10,30,45,.18)}
+  .topbar .brand{display:flex;align-items:center;gap:9px}
+  .topbar .brand img{width:28px;height:28px;border-radius:7px;object-fit:cover;object-position:50% 15%}
+  .topbar .brand b{font-size:14px;letter-spacing:.04em}
+  .topbar .brand small{display:block;font:500 8px 'Space Grotesk';letter-spacing:.18em;color:#6b93ad;line-height:1}
+  .topbar nav{display:flex;gap:2px;margin-left:8px}
+  .topbar nav a{padding:7px 13px;font-size:12.5px;color:#9dc0d6;border-radius:6px;transition:.15s}
+  .topbar nav a:hover{background:rgba(255,255,255,.07);color:#e8f2f8}
+  .topbar nav a.on{background:var(--deep);color:#fff}
+  .topbar .right{margin-left:auto;display:flex;align-items:center;gap:9px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;
+    font:500 10.5px 'Space Grotesk';letter-spacing:.05em;background:rgba(255,255,255,.08);color:#a9cadd}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(47,158,111,.2)}
+  .dot.off{background:#e07070;box-shadow:0 0 0 3px rgba(224,112,112,.2)}
+
+  .page{max-width:1320px;margin:0 auto;padding:16px 20px 48px}
+
+  .picker{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+    border-radius:9px;padding:11px 15px;margin-bottom:12px}
+  .picker .lb{font-size:12px;color:var(--muted)}
+  .picker select.inp{width:auto;min-width:290px}
+  .picker .sp{flex:1}
+
+  /* 事件摘要 */
+  .sum{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+    border-radius:9px;overflow:hidden;margin-bottom:14px}
+  .sum .c{background:#fff;padding:10px 13px}
+  .sum .c .k{font-size:10.5px;color:var(--muted)}
+  .sum .c .v{font:600 14px 'Noto Sans SC';margin-top:3px;line-height:1.35}
+  .sum .c .v.mono{font-family:var(--mono);font-size:12.5px}
+  @media(max-width:1000px){.sum{grid-template-columns:repeat(3,1fr)}}
+
+  /* 5 段流程条 */
+  .flowbar{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-bottom:16px;position:relative}
+  .flowbar .st{background:#fff;border:1px solid var(--line);border-right:0;padding:11px 14px;position:relative;cursor:pointer;transition:.16s}
+  .flowbar .st:first-child{border-radius:9px 0 0 9px}
+  .flowbar .st:last-child{border-right:1px solid var(--line);border-radius:0 9px 9px 0}
+  .flowbar .st:hover{background:#f7fbfe}
+  .flowbar .st.on{background:#eaf5fb;box-shadow:inset 0 -3px 0 var(--blue)}
+  .flowbar .st .n{font:600 9px 'Space Grotesk';letter-spacing:.16em;color:var(--faint)}
+  .flowbar .st .t{font-size:13px;font-weight:700;margin:2px 0 3px}
+  .flowbar .st .d{font-size:10.5px;color:var(--muted);line-height:1.5;min-height:31px}
+  .flowbar .st .tm{font:400 10.5px var(--mono);color:var(--deep);margin-top:5px;display:flex;align-items:center;gap:5px}
+  .flowbar .st .tm .ok{color:var(--green);font-weight:700}
+  @media(max-width:900px){
+    .flowbar{grid-template-columns:1fr}
+    .flowbar .st{border-right:1px solid var(--line);border-bottom:0}
+    .flowbar .st:first-child{border-radius:9px 9px 0 0}
+    .flowbar .st:last-child{border-radius:0 0 9px 9px;border-bottom:1px solid var(--line)}
+  }
+
+  .col{display:grid;grid-template-columns:1fr 336px;gap:14px;align-items:start}
+  @media(max-width:1140px){.col{grid-template-columns:1fr}}
+  @media(max-width:1500px){
+    /* 视口不够宽时，侧栏跟随正文下方排布，避免被裁切 */
+    .col{grid-template-columns:1fr}
+    #side{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-items:start}
+    #side .side-card{margin-bottom:0}
+  }
+  @media(max-width:900px){#side{grid-template-columns:1fr}}
+
+  /* 侧栏 */
+  .side-card{background:#fff;border:1px solid var(--line);border-radius:9px;padding:13px 15px;margin-bottom:12px}
+  .side-card h4{margin:0 0 9px;font-size:12.5px;display:flex;align-items:center;gap:7px}
+  .side-card h4 .n{font:600 9px 'Space Grotesk';letter-spacing:.14em;color:#fff;background:var(--deep);padding:1.5px 6px;border-radius:3px}
+  .side-card p{margin:0;font-size:11.5px;color:var(--muted);line-height:1.75}
+
+  .full-tl{position:relative;padding-left:20px;max-height:none}
+  .full-tl::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
+  .full-tl .it{position:relative;padding-bottom:12px;cursor:pointer}
+  .full-tl .it:hover .h{color:var(--deep)}
+  .full-tl .it::before{content:'';position:absolute;left:-18px;top:5px;width:9px;height:9px;border-radius:50%;
+    background:#fff;border:2px solid var(--blue)}
+  .full-tl .it.device::before{border-color:var(--violet)}
+  .full-tl .it.message::before{border-color:var(--orange)}
+  .full-tl .it.response::before{border-color:var(--green)}
+  .full-tl .it.review::before{border-color:var(--deep)}
+  .full-tl .it .h{font-size:12px;font-weight:600;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+  .full-tl .it .h time{font:400 10px var(--mono);color:var(--faint);font-weight:400}
+  .full-tl .it .d{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.6}
+  .full-tl .it.hl .h{color:var(--deep)}
+
+  .flow-hero h1 .badge{display:inline-block;vertical-align:middle;margin-left:9px;font:600 10px 'Space Grotesk';
+    letter-spacing:.1em;padding:3px 9px;border-radius:5px;background:#d94f4f;color:#fff}
+  .flow-hero h1 .badge.n{background:#2f9e6f}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="brand-logo.png" alt="" />
+    <div><b>安行护腰</b><small>EVENT TRACE REPLAY</small></div>
+  </div>
+  <nav>
+    <a href="index.html">官网首页</a>
+    <a href="admin.html">后台管理</a>
+    <a href="event-flow.html" class="on">事件流程回放</a>
+  </nav>
+  <div class="right">
+    <span class="pill"><span class="dot" id="liveDot"></span><span id="liveTxt">已连接平台</span></span>
+    <span class="pill mono" id="clock">—</span>
+  </div>
+</header>
+
+<div class="page" id="page">
+  <div class="picker">
+    <span class="lb">选择事件</span>
+    <select class="inp" id="evSel"></select>
+    <span class="bdg gray" id="evBadge">—</span>
+    <span class="sp"></span>
+    <span style="font-size:11.5px;color:var(--faint)">下方为该事件从<b>设备端</b>到<b>复盘</b>的全过程界面还原</span>
+  </div>
+
+  <div id="content"><div class="loading">正在载入事件…</div></div>
+</div>
+
+<script src="assets/platform.js"></script>
+<script src="assets/flow.js"></script>
+</body>
+</html>

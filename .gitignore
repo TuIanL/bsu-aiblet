@@ -1,10 +1,16 @@
-node_modules
-dist
+# macOS / editors
 .DS_Store
-*.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+.workbuddy/
 
-*.tsbuildinfo
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Runtime database and SQLite sidecar files (may contain health/contact data)
+server/data/*
+!server/data/.gitkeep
+
+# Generated research/pipeline intermediates
+output/

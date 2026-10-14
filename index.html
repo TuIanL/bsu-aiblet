@@ -3,14 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="安行护腰家庭步态守护看板，用于智能护腰产品路演演示。"
-    />
-    <title>安行护腰 · 家庭步态守护看板</title>
+    <meta name="theme-color" content="#0e6fa8" />
+    <meta name="description" content="安行护腰｜基于 TENG+IMU 多模态传感的老年跌倒风险识别与主动护髋系统。" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231b9ddb'/%3E%3Cpath d='M8 19c4-6 8-8 16-7-3 1-6 3-8 6 3 0 5 1 7 3-5 0-9-1-15 2 1-2 1-3 0-4Z' fill='white'/%3E%3C/svg%3E" />
+    <title>安行护腰｜智能感知 · 主动防护 · 安全守护</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .nav-dropdown.active > button { color: var(--deep); font-weight: 600; }
+      .nav-dropdown.active > button::after { content: ''; height: 2px; background: var(--orange); width: 17px; position: absolute; bottom: 17px; left: 0; }
+      /* 目标/待验证类中文口径数值字号小于纯数字指标，避免撑破卡片 */
+      .hero-proof strong.is-text { font-size: 20px; line-height: 1.5; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <header class="site-header" id="top">
+      <a class="brand" href="#top" aria-label="安行护腰首页"><img src="brand-logo.png" alt="安行护腰商标" /><span><strong>安行护腰</strong><small>ANXING TECH</small></span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="打开菜单">☰</button>
+      <nav class="main-nav" id="mainNav" aria-label="主导航">
+      <a class="active home-link" href="#top">首页</a><a href="#about">关于我们</a>
+      <div class="nav-dropdown product-nav"><button type="button" class="nav-section-trigger" data-target="#products" aria-expanded="false">产品 / 项目 <span>⌄</span></button><div class="dropdown-menu"><a href="#product-device">产品 A｜安行护腰</a><a href="#product-app">产品 B｜子女端 App</a><a href="admin.html">社区管理平台（后台）</a><a href="event-flow.html">设备事件流程回放</a></div></div>
+        <div class="nav-dropdown blog-nav"><button type="button" class="nav-section-trigger" data-target="#blog" aria-expanded="false">博客 <span>⌄</span></button><div class="dropdown-menu"><a href="#blog">行业知识文章</a><a href="#blog">技术文章</a><a href="#blog">案例分析</a></div></div>
+        <a href="#cases">案例</a><a href="#contact">联系方式</a><a href="#privacy">隐私政策</a>
+      </nav>
+      <a href="admin.html" class="header-cta" style="margin-right:8px">平台演示 <span>↗</span></a>
+      <a class="header-cta" href="#contact">合作咨询 <span>↗</span></a>
+    </header>
+
+    <main>
+      <section class="hero section-pad"><div class="hero-copy"><p class="eyebrow">ANXING TECH · SAFETY IN MOTION</p><h1>让每一次行走，<br /><em>都有被接住的可能。</em></h1><p class="hero-lede">安行护腰是一套面向老年跌倒防护的智能穿戴方案，把风险识别、瞬间护髋和事后救援连成一条安全闭环。</p><div class="hero-actions"><a class="button primary" href="#products">了解产品 <span>→</span></a><a class="button quiet" href="#about">认识安行守护</a></div><div class="hero-proof"><div><strong class="is-text">待验证</strong><span>风险识别效果</span></div><div><strong>≤5%</strong><span>误报率目标</span></div><div><strong>≥50%</strong><span>峰值冲击力下降目标</span></div></div></div><div class="hero-visual"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><img src="belt-front.png" alt="安行护腰产品展示" /><span class="float-note note-top">TENG + IMU<br /><small>多模态感知</small></span><span class="float-note note-bottom">ACTIVE HIP AIRBAG<br /><small>主动护髋</small></span></div></section>
+
+      <section class="story section-pad" id="about"><div class="section-label">01 / 关于我们</div><div class="story-grid"><div><h2>一次志愿，一次触动。<br /><span>一个项目，从真实需求开始。</span></h2></div><div><p>我们随北京体育大学青年协会走进养老社区。一位爷爷告诉我们，老伴因为一次普通跌倒造成髋部骨折。那句话让团队开始思考：背靠体育工程、运动康复和运动人体科学的专业积累，我们能不能把防护前移到跌倒发生的瞬间？</p><p>安行护腰由此起点，逐步形成“医 × 体 × 工”的协同团队，把社区观察带回实验室，也把验证过的专业知识带回老人身边。</p><a class="text-link" href="#cases">查看实践成果 <span>→</span></a></div></div><div class="discipline-strip"><div><b>运动人体科学</b><span>理解人体与跌倒风险</span></div><i>×</i><div><b>运动康复</b><span>把关动作与安全边界</span></div><i>×</i><div><b>体育工程</b><span>实现传感、算法与设备</span></div></div></section>
+
+      <section class="products section-pad" id="products"><div class="section-heading"><div><div class="section-label">02 / 产品与项目</div><h2>把防护节点，前移到跌倒的瞬间。</h2></div><p>从一件日常护腰出发，建立事前识别、事发保护、事后救援与长期连接的完整安全闭环。</p></div><div class="product-grid"><article class="product-card product-main" id="product-device"><div class="product-copy"><p class="product-index">PRODUCT A / CORE DEVICE</p><h3>安行护腰</h3><p>一款集 TENG+IMU 多模态传感、AI 语音交互与主动气囊护髋于一体的智能护腰设备。</p><ul><li><b>临跌风险识别</b><span>TENG 柔性传感 + IMU 惯性测量，百毫秒级预判</span></li><li><b>主动气囊缓冲</b><span>跌倒瞬间弹出，目标保护髋骨与大转子</span></li><li><b>事后救援</b><span>GPS 与蓝牙通知家属，减少独居风险</span></li></ul><button class="text-link open-detail" data-detail="device">查看技术细节 <span>→</span></button></div><div class="product-image"><img src="belt-flat.png" alt="安行护腰平铺展示" /><span>轻薄柔性<br />日用形态</span></div></article><article class="product-card product-app" id="product-app"><div><p class="product-index">PRODUCT B / CARE APP</p><h3>子女端 App</h3><p>让在外地的子女收到跌倒报警、GPS 位置推送和每周步态健康报告。</p><div class="app-screen"><div class="app-bar"><span>安行守护</span><i>●</i></div><div class="app-risk"><small>今日状态</small><strong>安全</strong><span>连续守护 06:42</span></div><div class="app-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><button class="text-link open-detail" data-detail="app">了解服务方式 <span>→</span></button></div></article></div><div class="platform-entry"><div><p class="product-index">PRODUCT PLATFORM / 网页端</p><h3>社区管理平台</h3><p>已完成的网页端运营系统：老人档案、防跌评估、设备台账、佩戴率看板、事件与响应记录、季度报告与改造建议。服务闭环的七个环节在这里运转。</p></div><div class="pe-links"><a class="button primary" href="admin.html">进入后台管理 <span>→</span></a><a class="button quiet" href="event-flow.html">查看完整事件流程</a></div></div><div class="safety-loop"><div class="loop-heading"><div class="section-label">THE SAFETY LOOP</div><h3>完整安全闭环</h3></div><div class="loop-items"><div><strong>01</strong><b>事前识别</b><span>融合传感，识别危险步态</span></div><div><strong>02</strong><b>事发保护</b><span>主动气囊，降低冲击风险</span></div><div><strong>03</strong><b>事后救援</b><span>位置推送，及时联系家属</span></div><div><strong>04</strong><b>长期连接</b><span>步态趋势，支持风险管理</span></div></div></div></section>
+
+      <section class="validation section-pad"><div class="section-label">03 / 验证成果</div><div class="validation-head"><h2>从实验室验证，走向真实场景。</h2><p>项目材料记录了从传感精度、步态识别到气囊跌落测试的阶段性结果，也在养老社区持续收集反馈。</p></div><div class="stat-grid"><div><strong>600</strong><span>传感精度验证样本</span><small>传感误差率 &lt;3%</small></div><div><strong>1000</strong><span>训练集步态数据</span><small>识别准确率待整机实测</small></div><div><strong>999+</strong><span>气囊跌落测试次数</span><small>峰值冲击力下降目标 ≥50%</small></div><div><strong>243</strong><span>面对面有效问卷</span><small>来自养老社区实践</small></div></div></section>
+
+      <section class="blog section-pad" id="blog"><div class="section-heading"><div><div class="section-label">04 / 博客</div><h2>把专业，写成看得懂的内容。</h2></div><a class="text-link" href="#blog">全部文章 <span>→</span></a></div><div class="blog-grid"><article class="blog-card featured"><div class="blog-tag">行业知识</div><h3>为什么跌倒防护，必须发生在触地之前？</h3><p>从老年跌倒的伤害结构出发，理解“报警”与“物理保护”的差别。</p><button class="read-more open-detail" data-detail="knowledge">阅读文章 <span>↗</span></button></article><article class="blog-card"><div class="blog-tag">技术文章</div><h3>TENG + IMU：一件护腰如何读懂危险步态</h3><p>柔性传感、惯性测量与多模态融合算法的产品化路径。</p><button class="read-more open-detail" data-detail="tech">阅读文章 <span>↗</span></button></article><article class="blog-card"><div class="blog-tag">案例分析</div><h3>从颐清园开始：社区反馈如何改变研发优先级</h3><p>243 份面对面问卷背后，老人真正关心的是轻便、舒适与保护。</p><button class="read-more open-detail" data-detail="case">阅读文章 <span>↗</span></button></article></div></section>
+
+      <section class="cases section-pad" id="cases"><div class="section-label">05 / 案例与实践</div><div class="case-grid"><div class="case-photo"><img src="belt-front.png" alt="安行护腰产品" /><span>01 / 实验室验证</span></div><div class="case-content"><h2>技术走出实验室，<br /><em>才有机会回应真实生活。</em></h2><div class="case-list"><div><strong>4 次</strong><span>进社区开展需求调研</span></div><div><strong>3 场</strong><span>专题讲座与运动指导</span></div><div><strong>32 份</strong><span>有效老年步态数据</span></div><div><strong>2 家</strong><span>合作意向机构</span></div></div><p>团队将老年人的日常活动、跌倒经历、腰髋不适和智能穿戴接受度带回研发现场，让产品优先解决“能不能穿、愿不愿意穿、危险时能不能保护”这些问题。</p><a class="button outline" href="#contact">讨论合作场景 <span>↗</span></a></div></div></section>
+
+      <section class="future section-pad"><div class="section-label">06 / 未来路线</div><h2>从一件护腰，走向适老健康服务。</h2><div class="timeline"><div><span>0—1 年</span><strong>MVP 优化</strong><p>完成核心实验验证，推进产权授权与养老机构试点。</p></div><div><span>1—3 年</span><strong>产品迭代</strong><p>传感硬件与算法双向升级，沉淀子女端 App 数据闭环。</p></div><div><span>3—5 年</span><strong>平台化发展</strong><p>延伸保险协同与日韩市场，输出适老科技方案。</p></div></div></section>
+
+      <section class="contact section-pad" id="contact"><div class="contact-box"><div><div class="section-label">07 / 联系方式</div><h2>一起把安全，带到更多人身边。</h2><p>如果你代表养老机构、康复中心、社区服务站，或希望了解项目合作，欢迎留下信息。</p><div class="contact-meta"><span>北京体育大学 · 体育工程学院</span><span>安行护腰项目组</span></div></div><form id="contactForm"><label>你的称呼<input name="name" required placeholder="例如：王老师" /></label><label>联系邮箱<input name="email" type="email" required placeholder="name@example.com" /></label><label>合作方向<select name="topic"><option>机构试点</option><option>技术合作</option><option>媒体与内容</option><option>其他咨询</option></select></label><button class="button primary" type="submit">提交咨询 <span>→</span></button></form></div></section>
+
+      <section class="privacy section-pad" id="privacy"><div class="privacy-inner"><div><div class="section-label">08 / 隐私政策</div><h2>把数据留在该留的地方。</h2></div><p>安行护腰的 AI 推理在设备本地完成，步态数据默认不上传云端。只有在用户主动同步时，数据才会联网传输。我们仅在提供服务、改进产品和获得用户授权的范围内使用信息，不出售个人数据。</p><a class="text-link open-detail" data-detail="privacy">查看隐私政策摘要 <span>→</span></a></div></section>
+    </main>
+    <footer class="site-footer"><div class="footer-brand"><img src="brand-logo.png" alt="安行护腰" /><span>安行护腰<br /><small>智能感知 · 主动防护 · 安全守护</small></span></div><div class="footer-links"><a href="#about">关于我们</a><a href="#products">产品 / 项目</a><a href="#blog">博客</a><a href="#cases">案例</a><a href="#contact">联系方式</a><a href="#privacy">隐私政策</a></div><p>© 2026 安行护腰项目组 · 北京体育大学</p></footer>
+    <dialog class="detail-dialog" id="detailDialog"><button class="dialog-close" id="dialogClose" aria-label="关闭">×</button><div id="dialogContent"></div></dialog><div class="toast" id="toast" role="status"></div><script src="app.js"></script>
   </body>
 </html>
